@@ -118,9 +118,9 @@ def move_snake():
     global food_stamps,fod_pos
     if snake.pos() in food_pos:
         food_ind = food_pos.index(snake.pos())
-        food.clearstamp(fstamp[food_ind])
+        food.clearstamp(food_ind)
         food_pos.pop(food_ind)
-        fstamp.pop(food_ind)
+        fstamp.pop()
         print('you ate food')
     turtle.ontimer(move_snake,TIME_STEP)
 move_snake()
