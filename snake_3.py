@@ -2,25 +2,28 @@ import turtle
 import random
 import time
 
+#variables
 turtle.tracer(1,0)
 score = 0
 size_x = 800
 size_y = 500
 turtle.setup(size_x,size_y)
-
 turtle.penup()
-
 square_size = 20
 start_len = 10
 
+#lists
+food_score_list = []
 pos_list =[]
 stamp_list = []
 food_pos = []
 food_stamp = []
 score_list = []
 
+#'snake' options
 snake = turtle.clone()
-snake.shape('square')
+snake.shape('turtle')
+snake.color('green')
 
 turtle.hideturtle()
 
@@ -43,7 +46,7 @@ DOWN_ARROW ="Down"
 RIGHT_ARROW = "Right"
 TIME_STEP = 100
 SPACEBAR ="space"
-time = 5000
+time_o= 5000
 UP = 0
 LEFT = 2
 DOWN = 1
@@ -124,10 +127,12 @@ def move_snake():
 
     if pos_list[-1] in pos_list[0:-1]:
         print("You ate yourself")
-        quit()
+        turtle.write('YOU ATE YOURSELF! WAIT !!',align="center", font=("Arial", 40, "normal"))
+        time.sleep(2.5)
         
-    global food_stamps,fod_pos,score, score_list
+    global food_stamps,fod_pos,score, score_list,food_score,food_score_list
     if snake.pos() in food_pos:
+        
         food_ind = food_pos.index(snake.pos())
         food.clearstamp(food_stamps[food_ind])
         food_pos.pop(food_ind)
@@ -135,12 +140,12 @@ def move_snake():
         print('you ate food')
         make_food()
         stamp_list.append(stamp_me)
-        
-        
+
+
         score = score + 1
         score_list.append(score)
         turtle.clear()
-        turtle.write("score : "+ str(score))
+        turtle.write("food eaten : "+ str(score),align="center")
         
 
     
@@ -149,22 +154,23 @@ def move_snake():
     turtle.ontimer(move_snake,TIME_STEP)
     
     
-
+turtle.register_shape('skull.gif')
 food = turtle.clone()
-food.shape('turtle')
+food.shape('skull.gif')
+#food.color('red')
 
 food_pos = []
 food_stamps = []
 
 
 def make_food():
-    
-    min_x =-int(size_x/2/square_size)+1
-    max_x =int(size_x/2/square_size)-1
-    min_y=-int(size_y/2/square_size)-1
-    max_y=int(size_y/2/square_size)+1
+    global food_pos,pos_list
+    min_x =-int(size_x/2.5/square_size)+1
+    max_x =int(size_x/2.5/square_size)-1
+    min_y=-int(size_y/2.5/square_size)-1
+    max_y=int(size_y/2.5/square_size)+1
 
-    food_x = random.randint(min_x,max_x)*square_size
+    food_x = random.randint(min_x,max_x)*square_size 
     food_y = random.randint(min_y,max_y)*square_size
     food_tup=(food_x, food_y)
     food_pos.append(food_tup)
@@ -172,6 +178,5 @@ def make_food():
 
     food_stamp1 = food.stamp()
     food_stamps.append(food_stamp1)
-     
 make_food()
 move_snake()
