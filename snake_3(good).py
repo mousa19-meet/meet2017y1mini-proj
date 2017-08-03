@@ -10,7 +10,36 @@ size_y = 500
 turtle.setup(size_x,size_y)
 turtle.penup()
 square_size = 20
-start_len = 11
+start_len = 10
+
+#lists
+food_score_list = []
+pos_list =[]
+stamp_list = []
+food_pos = []
+food_stamp = []
+score_list = []
+
+#'snake' options
+snake = turtle.clone()
+snake.shape('turtle')
+snake.color('green')
+
+turtle.hideturtle()
+
+for s in range(start_len):
+    x_pos = snake.pos()[0]
+    y_pos = snake.pos()[1]
+
+    x_pos+= square_size
+
+    my_pos = (x_pos , y_pos)
+    snake.goto(x_pos,y_pos)
+    pos_list.append(my_pos)
+
+    stamp_me = snake.stamp()
+    stamp_list.append(stamp_me)
+
 UP_ARROW = "Up"
 LEFT_ARROW = "Left"
 DOWN_ARROW ="Down"
@@ -28,67 +57,21 @@ down_edge = -250
 right_edge = 400
 left_edge = -400
 
-#lists
-food_score_list = []
-pos_list =[]
-stamp_list = []
-food_pos = []
-food_stamp = []
-score_list = []
-high_score = []
-
-#make the box
-"""
-box = turtle.clone()
-box.color('blue')
-box.hideturtle()
-box.penup()
-box.goto(left_edge,up_edge)
-box.pendown()
-box.goto(right_edge,up_edge)
-box.goto(right_edge,down_edge)
-box.goto(left_edge,down_edge)
-box.goto(left_edge,up_edge)
-box.penup()
-"""
-#'snake' options
-snake = turtle.clone()
-snake.shape('turtle')
-snake.color('green')
-
-turtle.hideturtle()
-
-#stamping the snake so it can be visable
-for s in range(start_len):
-    x_pos = snake.pos()[0]
-    y_pos = snake.pos()[1]
-    x_pos+= square_size
-    my_pos = (x_pos , y_pos)
-    snake.goto(x_pos,y_pos)
-    pos_list.append(my_pos)
-    stamp_me = snake.stamp()
-    stamp_list.append(stamp_me)
-
-#direction functions
 def up_1():
     global direction
-    if direction != DOWN: #this doesnt let the user click down
-        direction = UP     #if going up
+    direction = UP
     print('up key')
 def down_1():
     global direction
-    if direction != UP:  #this doesnt let the user click up
-        direction = DOWN  #if going down
+    direction = DOWN
     print('down key')
 def left_1():
     global direction
-    if direction != RIGHT: #this doesnt let the user click right    
-        direction = LEFT    #if going left
+    direction = LEFT
     print('left key')
 def right_1():
     global direction
-    if direction != LEFT:   #this doesnt let the user click left
-        direction = RIGHT    #if going right
+    direction = RIGHT
     print('right key')
 
 turtle.onkeypress(up_1,UP_ARROW)
@@ -103,14 +86,19 @@ def move_snake():
     x_pos = my_pos[0]
     y_pos = my_pos[1]
 
+    
     if direction == RIGHT:
         snake.goto(x_pos + square_size, y_pos)
+        print('move right')
     elif direction ==LEFT:
         snake.goto(x_pos - square_size,y_pos)
+        print('move left')
     elif direction == UP:
         snake.goto(x_pos,y_pos + square_size)
+        print('move up')
     elif direction == DOWN:
         snake.goto(x_pos, y_pos - square_size)
+        print('move down')
         
     my_pos=snake.pos()
     pos_list.append(my_pos)
@@ -125,24 +113,21 @@ def move_snake():
     new_ypos = new_pos[1]
 
     if new_xpos >= right_edge:
-        turtle.write('You hit the right edge , GAME OVER!',align="center", font=("Arial", 30, "normal"))
-        time.sleep(1.5)
+        print('you hit the right edge , GAME OVER!')
         quit()
     elif new_xpos <= left_edge:
-        turtle.write('You hit the left edge , GAME OVER!',align="center", font=("Arial", 30, "normal"))
-        time.sleep(1.5)
+        print('you hit the left edge , GAME OVER!')
         quit()
     elif new_ypos >= up_edge:
-        turtle.write('You hit the up edge, GAME OVER!',align="center", font=("Arial", 30, "normal"))
-        time.sleep(1.5)
+        print('you hit the up edge, GAME OVER!')
         quit()
     elif new_ypos <= down_edge:
-        turtle.write('You hit the down edge , GAME OVER!',align="center", font=("Arial", 30, "normal"))
-        time.sleep(1.5)
+        print('you hit the down edge , GAME OVER!')
         quit()
 
     if pos_list[-1] in pos_list[0:-1]:
-        turtle.write('YOU ATE YOURSELF! WAIT !!',align="center", font=("Arial", 30, "normal"))
+        print("You ate yourself")
+        turtle.write('YOU ATE YOURSELF! WAIT !!',align="center", font=("Arial", 40, "normal"))
         time.sleep(2.5)
         
     global food_stamps,fod_pos,score, score_list,food_score,food_score_list
@@ -156,19 +141,23 @@ def move_snake():
         make_food()
         stamp_list.append(stamp_me)
 
-        #the score display
+
         score = score + 1
         score_list.append(score)
         turtle.clear()
-        turtle.write("SCORE : "+ str(score),align="center",font=("Arial", 15, "normal"))
-          
+        turtle.write("food eaten : "+ str(score),align="center")
+        
+
+    
+        
+     
     turtle.ontimer(move_snake,TIME_STEP)
     
-#get the shape of the skull as food
+    
 turtle.register_shape('skull.gif')
 food = turtle.clone()
 food.shape('skull.gif')
-
+#food.color('red')
 
 food_pos = []
 food_stamps = []
@@ -183,7 +172,6 @@ def make_food():
 
     food_x = random.randint(min_x,max_x)*square_size 
     food_y = random.randint(min_y,max_y)*square_size
-    
     food_tup=(food_x, food_y)
     food_pos.append(food_tup)
     food.goto(food_x,food_y)
